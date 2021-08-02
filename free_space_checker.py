@@ -1,5 +1,6 @@
 #!/usr/env python3
 
+import sys
 import os
 import json
 import argparse
@@ -86,15 +87,47 @@ parser = argparse.ArgumentParser(
     description='Simple HTTP server that provides API to perform free disk space checks',
     epilog=example_text,
 )
-parser.add_argument('--address', default='', help='Address to bind to')
-parser.add_argument('--port', default=9929, help='Port to listen to')
-parser.add_argument('dirs', metavar='DIR', nargs='+', help='Directories to monitor free space in (path:<10G | 50%%>)')
+
+parser.add_argument(
+    '--address',
+    default='',
+    help='Address to bind to'
+)
+
+parser.add_argument(
+    '--port',
+    default=9929,
+    help='Port to listen to'
+)
+
+parser.add_argument(
+    'dirs',
+    metavar='DIR',
+    nargs='+',
+    help='Directories to monitor free space in (path:<10G | 50%%>)'
+)
+
+parser.add_argument(
+    '--single-argument-dirs',
+    action='store_true',
+    default=False,
+    help='Parse first dirs argument as comma-separated list of directories'
+)
 
 args = parser.parse_args()
 
+if args.single_argument_dirs:
+    if len(args.dirs) > 1:
+        print('Expected only one positional argument due to --single-argument-dirs switch was specified', file=sys.stderr)
+        sys.exit(-1)
+
+    dirs = args.dirs[0].split(',')
+else:
+    dirs = args.dirs
+
 server_address = (args.address, args.port)
 httpd = Server(
-    [parse_directory_spec(d) for d in args.dirs],
+    [parse_directory_spec(d) for d in dirs],
     server_address,
     RequestHandler
 )
