@@ -96,7 +96,7 @@ parser.add_argument(
 
 parser.add_argument(
     '--port',
-    default=9929,
+    default=8080,
     help='Port to listen to'
 )
 
