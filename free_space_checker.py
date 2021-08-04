@@ -115,6 +115,13 @@ parser.add_argument(
     help='Parse first dirs argument as comma-separated list of directories'
 )
 
+parser.add_argument(
+    '--strip-path',
+    action='store_true',
+    default=False,
+    help='Perform str.strip on each path specification'
+)
+
 args = parser.parse_args()
 
 if args.single_argument_dirs:
@@ -125,6 +132,9 @@ if args.single_argument_dirs:
     dirs = args.dirs[0].split(',')
 else:
     dirs = args.dirs
+
+if args.strip_path:
+    dirs = [d.strip() for d in dirs]
 
 server_address = (args.address, args.port)
 httpd = Server(
