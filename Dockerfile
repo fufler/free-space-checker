@@ -13,4 +13,5 @@ CMD python                     \
   --address ${CHECKER_ADDRESS} \
   --port ${CHECKER_PORT}       \
   --single-argument-dirs       \
-  ${CHECKER_DIRECTORIES}
+  --strip-path                 \
+  "${CHECKER_DIRECTORIES}"
